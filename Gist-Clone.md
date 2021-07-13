@@ -9,5 +9,5 @@ Clone of Github Gist. Project should expose a REST api. Django admin is bonus. S
 - User can list his/her gists
 - Gist detail can be fetched
 - User can star any public gist
--
+- User can delete his/her own gists
 
