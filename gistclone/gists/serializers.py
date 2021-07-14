@@ -2,12 +2,13 @@ from django.db.models.query import QuerySet
 from rest_framework import serializers
 from gists.models import Gist
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 class GistSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Gist
-        fields=['url','id','name','description','code','owner'] 
+        fields=['url','id','name','description','code','owner','is_public','stars']  
 
 
 class UserSerializer(serializers.ModelSerializer):

@@ -9,6 +9,8 @@ class Gist(models.Model):
     description = models.CharField(max_length=100, blank=True, default='')
     code = models.TextField(blank=True,default='')
     owner = models.ForeignKey('auth.User', related_name='gists', on_delete=models.CASCADE)
+    is_public = models.BooleanField(default=True)
+    stars = models.ManyToManyField('auth.User', related_name='stars', blank=True)
 
 
     class Meta:

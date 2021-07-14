@@ -36,15 +36,20 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', 
+    'django.contrib.sites',
 
     #Third-Party Apps 
     'rest_framework',
    
 
     #Local Apps
-    'gists.apps.GistsConfig'
+    'gists.apps.GistsConfig',
+
+    #document
+    'drf_yasg',
 ]
+SITE_ID=1
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
