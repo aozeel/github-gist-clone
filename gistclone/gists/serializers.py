@@ -18,6 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
         model=User
         fields = ['url','id','username','gists']
 
+    """ def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user """
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

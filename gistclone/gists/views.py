@@ -69,6 +69,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    @csrf_exempt
+    def post(self, request):
+        serializer = UserRegisterSerializer(data = request.data)
 
 class GistOwnViewSet(
     mixins.ListModelMixin,mixins.DestroyModelMixin,
