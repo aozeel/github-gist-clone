@@ -19,7 +19,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework import mixins
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.documentation import include_docs_urls,get_docs_view,get_schema_view,get_schemajs_view
 # Create your views here.+
 
 @api_view(['GET'])
@@ -33,6 +35,11 @@ def api_root(request, format=None):
 
 @api_view(['POST'])
 def give_star_to_gist(request,gist_id):
+    """
+    This viewset allow user to give a star any gist
+
+    Additionally we also provide an extra `highlight` action.
+    """
     gist=generics.get_object_or_404(Gist.objects.all(), pk=gist_id)
     gist.stars.add(request.user)
     serializer_context = {
@@ -42,6 +49,12 @@ def give_star_to_gist(request,gist_id):
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class UserCreate(generics.CreateAPIView):
+    """
+    The action that allow users to register.
+    .
+
+    Additionally we also provide an extra `highlight` action.
+    """
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer 
     permission_classes = ()
@@ -57,7 +70,15 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class GistOwnViewSet(viewsets.ModelViewSet):
+class GistOwnViewSet(
+    mixins.ListModelMixin,mixins.DestroyModelMixin,
+                     viewsets.GenericViewSet):
+    """
+    Retrieve user's gists and be able to delete each
+    .
+
+    Additionally we also provide an extra `highlight` action.
+    """
     #queryset = Gist.objects.all()
     serializer_class = GistSerializer
     permission_classes = [IsGistOwner,]
@@ -66,10 +87,10 @@ class GistOwnViewSet(viewsets.ModelViewSet):
          return  Gist.objects.filter(owner=self.request.user.id)
 
 
-class GistViewSet(viewsets.ModelViewSet):
+class GistViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateModelMixin,
+                     viewsets.GenericViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    This viewset provides to see public gist, its details and also post new gists.
 
     Additionally we also provide an extra `highlight` action.
     """
@@ -78,10 +99,6 @@ class GistViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly]
 
-    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    def highlight(self, request, *args, **kwargs):
-        gist = self.get_object()
-        return Response(gist.highlighted)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

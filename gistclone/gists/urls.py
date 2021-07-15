@@ -13,7 +13,7 @@ from gists.views import give_star_to_gist
 
 router = DefaultRouter()
 router.register(r'gists',views.GistViewSet)
-router.register(r'users', views.UserViewSet)  
+#router.register(r'users', views.UserViewSet)  
 router.register(r'mygists', views.GistOwnViewSet,basename='Gists')
 
 urlpatterns = [

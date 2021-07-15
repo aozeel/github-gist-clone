@@ -23,13 +23,13 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-schema_view = get_schema_view(
+schema_view = get_schema_view( 
    openapi.Info(
-      title="Dummy API",
-      default_version='v1',
-      description="Dummy description",
+      title="Github Gist Clone REST API",
+      default_version='v0.1',
+      description="This is a Django REST API project for a clone of Github Gists",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@dummy.local"),
+      contact=openapi.Contact(email="abdullah.ozel@aurorabilisimc.om"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
@@ -40,9 +40,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('gists.urls')),
-    path('account/register', views.UserCreate.as_view()),
-    url(r'^playground/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-   url(r'^docs/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('account/register', views.UserCreate.as_view()),  
+    url(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^docs-redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
 
 urlpatterns += [
