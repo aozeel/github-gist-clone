@@ -1,9 +1,10 @@
 import re
 import rest_framework
 from rest_framework import serializers
+from rest_framework.views import APIView
 from gists.permissions import IsGistOwner, IsOwnerOrReadOnly
 from gists.models import Gist
-from gists.serializers import GistSerializer, UserRegisterSerializer, UserSerializer
+from gists.serializers import GistSerializer, GistStarSerializer, UserRegisterSerializer, UserSerializer
 from rest_framework import generics
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -75,6 +76,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class GistOwnViewSet(
     mixins.ListModelMixin,mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
     """
     Retrieve user's gists and be able to delete each
@@ -84,7 +86,7 @@ class GistOwnViewSet(
     """
     #queryset = Gist.objects.all()
     serializer_class = GistSerializer
-    permission_classes = [IsGistOwner,]
+    permission_classes = [IsGistOwner,] 
 
     def get_queryset(self):
          return  Gist.objects.filter(owner=self.request.user.id)
@@ -105,3 +107,9 @@ class GistViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateM
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class StarListViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    queryset = Gist.objects.all()
+    serializer_class = GistStarSerializer
+    permission_classes = (permissions.IsAuthenticated,)
