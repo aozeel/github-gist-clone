@@ -11,6 +11,7 @@ class Gist(models.Model):
     owner = models.ForeignKey('auth.User', related_name='gists', on_delete=models.CASCADE)
     is_public = models.BooleanField(default=True)
     stars = models.ManyToManyField('auth.User', related_name='stars', blank=True)
+    
 
 
     class Meta:
