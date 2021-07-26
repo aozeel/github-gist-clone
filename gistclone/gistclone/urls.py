@@ -29,7 +29,7 @@ schema_view = get_schema_view(
       default_version='v0.1',
       description="This is a Django REST API project for a clone of Github Gists",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="abdullah.ozel@aurorabilisimc.om"),
+      contact=openapi.Contact(email="abdullah.ozel@aurorabilisim.com"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
@@ -41,6 +41,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('gists.urls')),
     path('account/register', views.UserCreate.as_view()),  
+    #documentation
     url(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^docs-redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

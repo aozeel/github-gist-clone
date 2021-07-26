@@ -1,9 +1,10 @@
 import re
 import rest_framework
 from rest_framework import serializers
-from gists.permissions import IsGistOwner, IsOwnerOrReadOnly
+from rest_framework.views import APIView
 from gists.models import Gist
-from gists.serializers import GistSerializer, UserRegisterSerializer, UserSerializer
+from gists.serializers import GistSerializer, GistStarSerializer, UserRegisterSerializer, UserSerializer
+from gists.permissions import IsOwnerOrReadOnly
 from rest_framework import generics
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -25,7 +26,7 @@ from rest_framework.documentation import include_docs_urls,get_docs_view,get_sch
 # Create your views here.+
 
 @api_view(['GET'])
-def api_root(request, format=None):
+def api_root(request, format=None): 
     return Response({
         'users': reverse('user-list', request=request, format=format),
         'gists':reverse('gist-list', request=request, format=format),
@@ -75,16 +76,18 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class GistOwnViewSet(
     mixins.ListModelMixin,mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
     """
-    Retrieve user's gists and be able to delete each
+    Retrieve current user's gists and be able to delete each
     .
 
     Additionally we also provide an extra `highlight` action.
     """
     #queryset = Gist.objects.all()
     serializer_class = GistSerializer
-    permission_classes = [IsGistOwner,]
+    permission_classes = [IsOwnerOrReadOnly,] 
 
     def get_queryset(self):
          return  Gist.objects.filter(owner=self.request.user.id)
@@ -99,9 +102,19 @@ class GistViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateM
     """
     queryset = Gist.objects.filter(is_public=True)
     serializer_class = GistSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
 
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class StarListViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    This viewset provides to see all users who give a star to spesific gist.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Gist.objects.all()
+    serializer_class = GistStarSerializer
+    permission_classes = (permissions.IsAuthenticated,)

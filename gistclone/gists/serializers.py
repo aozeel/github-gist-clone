@@ -1,3 +1,4 @@
+from re import S
 from django.db.models.query import QuerySet
 from rest_framework import serializers
 from gists.models import Gist
@@ -6,9 +7,15 @@ from django.views.decorators.csrf import csrf_exempt
 
 class GistSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    star_count = serializers.IntegerField(
+        source='stars.count',
+        read_only=True
+    )
     class Meta:
         model = Gist
-        fields=['url','id','name','description','code','owner','is_public','stars']  
+        fields=['url','id','name','description','code','owner','is_public','stars','star_count']  
+        extra_kwargs = {'stars':{'read_only':True}}
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,14 +25,8 @@ class UserSerializer(serializers.ModelSerializer):
         model=User
         fields = ['url','id','username','gists']
 
-    """ def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user """
-
 class UserRegisterSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = User
         fields = ('username', 'password')
@@ -37,3 +38,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class GistStarSerializer(serializers.ModelSerializer):
+    stars = UserRegisterSerializer(many=True, read_only=True) #stars in in Gists model with foreign key
+    class Meta:
+        model = Gist
+        fields = ['stars',]

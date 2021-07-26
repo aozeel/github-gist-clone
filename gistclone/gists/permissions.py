@@ -14,11 +14,15 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # Write permissions are only allowed to the owner of the gist.
         return obj.owner == request.user
 
-class IsGistOwner(permissions.BasePermission):
+""" class IsGistOwner(permissions.BasePermission):
     #for view permisson
     def has_permission(self, request, view):
         return request.user and request.user.is_authenticated
 
     #for object level permissions
     def has_object_permission(self, request, view, gist_obj):
-        return gist_obj.owner.id == request.user.id
+        return gist_obj.owner.id == request.user.id """
+
+
+
+
