@@ -26,7 +26,7 @@ from rest_framework.documentation import include_docs_urls,get_docs_view,get_sch
 # Create your views here.+
 
 @api_view(['GET'])
-def api_root(request, format=None):
+def api_root(request, format=None): 
     return Response({
         'users': reverse('user-list', request=request, format=format),
         'gists':reverse('gist-list', request=request, format=format),
@@ -110,6 +110,11 @@ class GistViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateM
 
 
 class StarListViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    This viewset provides to see all users who give a star to spesific gist.
+
+    Additionally we also provide an extra `highlight` action.
+    """
     queryset = Gist.objects.all()
     serializer_class = GistStarSerializer
     permission_classes = (permissions.IsAuthenticated,)

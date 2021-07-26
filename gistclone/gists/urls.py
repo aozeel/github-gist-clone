@@ -13,12 +13,12 @@ from gists.views import give_star_to_gist
 
 router = DefaultRouter()
 router.register(r'gists',views.GistViewSet)
-router.register(r'users', views.UserViewSet)   
+#router.register(r'users', views.UserViewSet)   
 router.register(r'mygists', views.GistOwnViewSet,basename='Gists')
 router.register(r'listusersofstar', views.StarListViewSet, basename='liststar')
 
 urlpatterns = [
     path('', include(router.urls)),
     url(r'^givestar/(?P<gist_id>\d+)/$', give_star_to_gist,
-    name='give_star_to_gist'),
+    name='give_star_to_gist'), 
 ]
