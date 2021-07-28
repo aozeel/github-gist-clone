@@ -1,10 +1,10 @@
 #base image
 FROM python:3.8
 #setup environment variable
-ENV DockerHOME=/home/app/webapp
+ENV DockerHOME=/usr/src/app
 
 # set work directory
-RUN mkdir -p $DockerHOME
+#RUN mkdir -p $DockerHOME
 
 # where your code lives
 WORKDIR $DockerHOME
@@ -12,6 +12,10 @@ WORKDIR $DockerHOME
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update \
+    && apt-get -y install libpq-dev gcc \
+    && pip install psycopg2
 # install dependencies
 RUN pip install --upgrade pip
 #copy whole project to your docker home directory. COPY . $DockerHOME
@@ -21,6 +25,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 # port where the Django app runs
-EXPOSE 8000
+#EXPOSE 8000
 #start server
-CMD ["python", "gistclone/manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["python", "gistclone/manage.py", "runserver", "0.0.0.0:8000"]
