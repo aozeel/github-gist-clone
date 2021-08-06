@@ -15,7 +15,8 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update \
     && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
+    && pip install psycopg2 \
+    && apt-get install -yyq netcat
 # install dependencies
 RUN pip install --upgrade pip
 #copy whole project to your docker home directory. COPY . $DockerHOME
@@ -23,7 +24,13 @@ RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
+# copy entrypoint.sh
+COPY entrypoint.sh .
+
+#Copy the project
+COPY gistclone .
+
+ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]
 # port where the Django app runs
 #EXPOSE 8000
 #start server

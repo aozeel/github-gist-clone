@@ -11,9 +11,9 @@ from rest_framework.routers import DefaultRouter
 from gists import views
 from gists.views import give_star_to_gist
 
-router = DefaultRouter()
+router = DefaultRouter() 
 router.register(r'gists',views.GistViewSet)
-#router.register(r'users', views.UserViewSet)   
+router.register(r'users', views.UserViewSet)   
 router.register(r'mygists', views.GistOwnViewSet,basename='Gists')
 router.register(r'listusersofstar', views.StarListViewSet, basename='liststar')
 
